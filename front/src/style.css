@@ -1,4 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Coiny&display=swap');
+
 @import "tailwindcss";
+@theme {
+  --color-primary: #5f0a87; 
+  --color-secondary: #2f004f;
+  --color-accent: #fb8b24;
+  --color-login: #A6F584;
+  --font-coiny: "coiny", sans-serif;
+}
+
+
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
