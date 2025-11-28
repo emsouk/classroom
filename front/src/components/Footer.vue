@@ -13,7 +13,7 @@
             />
           </div>
 
-          <p class="mt-4 max-w-xs text-gray-500 dark:text-gray-400">
+          <p class="mt-4 max-w-xs text-white/70">
             Made by ELGWVN corporate with the ❤️
           </p>
         </div>
@@ -22,34 +22,23 @@
           class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3"
         >
           <div>
-            <p class="font-medium text-gray-900 dark:text-white">
-              Informations
-            </p>
+            <p class="font-medium text-white underline">Informations</p>
 
             <ul class="mt-6 space-y-4 text-sm">
               <li>
-                <a
-                  href="#"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                >
+                <a href="#" class="text-white transition hover:opacity-75">
                   Qui sommes-nous ?
                 </a>
               </li>
 
               <li>
-                <a
-                  href="#"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                >
+                <a href="#" class="text-white transition hover:opacity-75">
                   Conditions générales
                 </a>
               </li>
 
               <li>
-                <a
-                  href="#"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                >
+                <a href="#" class="text-white transition hover:opacity-75">
                   Le site de l'ADRAR
                 </a>
               </li>
@@ -57,23 +46,17 @@
           </div>
 
           <div>
-            <p class="font-medium text-gray-900 dark:text-white">Aide</p>
+            <p class="font-medium text-white underline">Aide</p>
 
             <ul class="mt-6 space-y-4 text-sm">
               <li>
-                <a
-                  href="#"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                >
+                <a href="#" class="text-white transition hover:opacity-75">
                   Nous contacter
                 </a>
               </li>
 
               <li>
-                <a
-                  href="#"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                >
+                <a href="#" class="text-white transition hover:opacity-75">
                   Assistance Client
                 </a>
               </li>
@@ -81,7 +64,7 @@
           </div>
 
           <div>
-            <p class="font-medium text-gray-900 dark:text-white">Suivez-nous</p>
+            <p class="font-medium text-white underline">Suivez-nous</p>
 
             <ul class="mt-6 flex gap-6">
               <li>
@@ -89,7 +72,7 @@
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  class="text-white transition hover:opacity-75"
                 >
                   <span class="sr-only">Facebook</span>
 
@@ -113,7 +96,7 @@
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  class="text-white transition hover:opacity-75"
                 >
                   <span class="sr-only">Instagram</span>
 
@@ -137,7 +120,7 @@
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  class="text-white transition hover:opacity-75"
                 >
                   <span class="sr-only">Twitter</span>
 
@@ -159,7 +142,7 @@
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  class="text-white transition hover:opacity-75"
                 >
                   <span class="sr-only">GitHub</span>
 
@@ -183,7 +166,7 @@
                   href="#"
                   rel="noreferrer"
                   target="_blank"
-                  class="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
+                  class="text-white transition hover:opacity-75"
                 >
                   <span class="sr-only">Dribbble</span>
 
@@ -207,8 +190,6 @@
       </div>
     </div>
 
-    <p class="text-xs text-gray-500 dark:text-gray-400">
-      © 2025. ELGWVN. All rights reserved.
-    </p>
+    <p class="text-xs text-gray-500">© 2025. ELGWVN. All rights reserved.</p>
   </footer>
 </template>

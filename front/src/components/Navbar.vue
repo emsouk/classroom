@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+</script>
+
 <template>
   <header class="bg-secondary">
     <div class="px-4 sm:px-6 lg:px-8">
@@ -17,39 +21,39 @@
           <nav aria-label="Global">
             <ul class="flex items-center gap-6 text-md">
               <li>
-                <a
+                <RouterLink
                   class="text-white transition hover:text-gray-500/75"
-                  href="#"
+                  to="/welcome"
                 >
                   ACCUEIL
-                </a>
+                </RouterLink>
               </li>
 
               <li>
-                <a
+                <RouterLink
                   class="text-white transition hover:text-gray-500/75"
-                  href="#"
+                  to="/modules"
                 >
                   MODULES
-                </a>
+                </RouterLink>
               </li>
 
               <li>
-                <a
+                <RouterLink
                   class="text-white transition hover:text-gray-500/75"
-                  href="#"
+                  to="/blog"
                 >
                   BLOG
-                </a>
+                </RouterLink>
               </li>
 
               <li>
-                <a
+                <RouterLink
                   class="text-white transition hover:text-gray-500/75"
-                  href="#"
+                  to="/veille-techno"
                 >
                   VEILLE TECHNO
-                </a>
+                </RouterLink>
               </li>
             </ul>
           </nav>
@@ -62,12 +66,12 @@
             class="hidden sm:block rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent text-white"
           />
           <div class="sm:flex sm:gap-4">
-            <a
+            <RouterLink
               class="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-accent/90"
-              href="#"
+              to="/profile"
             >
               Mon profil
-            </a>
+            </RouterLink>
           </div>
 
           <div class="block md:hidden">
