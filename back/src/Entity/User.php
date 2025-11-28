@@ -23,8 +23,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var list<string> The user roles
      */
-    #[ORM\Column]
-    private array $roles = [];
+    // #[ORM\Column]
+    // private array $roles = [];
 
     /**
      * @var string The hashed password
@@ -49,6 +49,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private array $favoriteCourses = [];
+
+    // Relation de l'entité user a l'entité Role 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $roles = null;
 
     public function getId(): ?int
     {
