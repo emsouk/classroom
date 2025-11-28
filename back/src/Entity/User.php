@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -54,6 +56,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $roles = null;
+
+    /**
+     * @var Collection<int, Course>
+     */
+    #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'teacherId')]
+    private Collection $courses;
+
+    /**
+     * @var Collection<int, Session>
+     */
+    #[ORM\ManyToMany(targetEntity: Session::class, mappedBy: 'students')]
+    private Collection $sessions;
+
+    /**
+     * @var Collection<int, Session>
+     */
+    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'referentTeacher')]
+    private Collection $pizza;
+
+
+
+    public function __construct()
+    {
+        $this->courses = new ArrayCollection();
+        $this->modules = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+        $this->pizza = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -207,4 +237,101 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getCourses(): Collection
+    {
+        return $this->courses;
+    }
+
+    public function addCourse(Course $course): static
+    {
+        if (!$this->courses->contains($course)) {
+            $this->courses->add($course);
+            $course->setTeacherId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCourse(Course $course): static
+    {
+        if ($this->courses->removeElement($course)) {
+            // set the owning side to null (unless already changed)
+            if ($course->getTeacherId() === $this) {
+                $course->setTeacherId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): static
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions->add($session);
+            $session->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): static
+    {
+        if ($this->sessions->removeElement($session)) {
+            $session->removeStudent($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getPizza(): Collection
+    {
+        return $this->pizza;
+    }
+
+    public function addPizza(Session $pizza): static
+    {
+        if (!$this->pizza->contains($pizza)) {
+            $this->pizza->add($pizza);
+            $pizza->setReferentTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removePizza(Session $pizza): static
+    {
+        if ($this->pizza->removeElement($pizza)) {
+            // set the owning side to null (unless already changed)
+            if ($pizza->getReferentTeacher() === $this) {
+                $pizza->setReferentTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }
