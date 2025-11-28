@@ -19,45 +19,59 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    public function findAll(): array
+
+    public function findAllActive(): array
     {
-        return $this->createQueryBuilder('user')
-            // ->select($this->fieldsList())
-            ->where('user.isActive = :active')
-            // ->andWhere('animal.isVisible = :visible')
+        return $this->createQueryBuilder('u')
+            ->where('u.isActive = :active')
             ->setParameter('active', true)
-            // ->setParameter('visible', true)
-            ->orderBy('user.id', 'ASC')
+            ->orderBy('u.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
-    public function findById(int $id): User
+
+    public function findById(int $id): ?User
     {
-        return $this->createQueryBuilder('user')
-            ->where('user.id = ::id')
+        return $this->createQueryBuilder('u')
+            ->where('u.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
-    public function login(string $email, string $password): mixed
-    {
 
-        $result  = $this->createQueryBuilder('user')
-            ->where('user.email = :email')
-            ->andWhere('user.password = :password')
+    public function findByEmail(string $email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')
             ->setParameter('email', $email)
-            ->setParameter('password', $password)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+    public function findByRole(string $roleName): array
+    {
+        return $this->createQueryBuilder('u')
+            ->innerJoin('u.role', 'r')
+            ->where('r.name = :roleName')
+            ->setParameter('roleName', $roleName)
             ->getQuery()
             ->getResult();
-
-        return $result ?? ['message' => 'Invalid credentials'];
     }
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
+
+    public function searchByName(string $search): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.firstname LIKE :search OR u.lastname LIKE :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->orderBy('u.lastname', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {

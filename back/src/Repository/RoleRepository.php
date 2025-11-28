@@ -16,28 +16,34 @@ class RoleRepository extends ServiceEntityRepository
         parent::__construct($registry, Role::class);
     }
 
-    //    /**
-    //     * @return Role[] Returns an array of Role objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('r.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
 
-    //    public function findOneBySomeField($value): ?Role
-    //    {
-    //        return $this->createQueryBuilder('r')
-    //            ->andWhere('r.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findAllOrdered(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findByName(string $name): ?Role
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+    public function countUsersByRole(Role $role): int
+    {
+        return $this->createQueryBuilder('r')
+            ->select('COUNT(u.id)')
+            ->leftJoin('r.users', 'u')
+            ->where('r.id = :roleId')
+            ->setParameter('roleId', $role->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
