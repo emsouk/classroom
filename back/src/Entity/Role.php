@@ -6,6 +6,7 @@ use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups; // ← AJOUTEZ CETTE LIGNE
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 class Role
@@ -13,16 +14,18 @@ class Role
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read', 'role:read'])] // ← AJOUTEZ
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read', 'role:read'])] // ← AJOUTEZ
     private ?string $name = null;
 
-    // Relation de l'entité Role a l'entité User
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'roles')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'role')] // ← Corrigé : 'role' au lieu de 'roles'
+    // ⚠️ PAS de Groups ici pour éviter la circularité
     private Collection $users;
 
     public function __construct()
@@ -43,7 +46,6 @@ class Role
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -59,21 +61,18 @@ class Role
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->setRoles($this);
+            $user->setRole($this);
         }
-
         return $this;
     }
 
     public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getRoles() === $this) {
-                $user->setRoles(null);
+            if ($user->getRole() === $this) {
+                $user->setRole(null);
             }
         }
-
         return $this;
     }
 }

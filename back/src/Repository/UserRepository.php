@@ -19,6 +19,42 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('user')
+            // ->select($this->fieldsList())
+            ->where('user.isActive = :active')
+            // ->andWhere('animal.isVisible = :visible')
+            ->setParameter('active', true)
+            // ->setParameter('visible', true)
+            ->orderBy('user.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findById(int $id): User
+    {
+        return $this->createQueryBuilder('user')
+            ->where('user.id = ::id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function login(string $email, string $password): mixed
+    {
+
+        $result  = $this->createQueryBuilder('user')
+            ->where('user.email = :email')
+            ->andWhere('user.password = :password')
+            ->setParameter('email', $email)
+            ->setParameter('password', $password)
+            ->getQuery()
+            ->getResult();
+
+        return $result ?? ['message' => 'Invalid credentials'];
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
@@ -32,29 +68,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
-
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

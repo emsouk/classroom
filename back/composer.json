@@ -18,8 +18,10 @@
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/property-access": "7.3.*",
         "symfony/runtime": "7.3.*",
         "symfony/security-bundle": "7.3.*",
+        "symfony/serializer": "7.3.*",
         "symfony/yaml": "7.3.*"
     },
     "config": {
@@ -74,6 +76,10 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.65"
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
+        "fakerphp/faker": "^1.24",
+        "symfony/maker-bundle": "^1.65",
+        "symfony/stopwatch": "7.3.*",
+        "symfony/web-profiler-bundle": "7.3.*"
     }
 }
