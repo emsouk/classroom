@@ -19,11 +19,12 @@ final class UserController extends AbstractController
     #[Route('', name: 'app_user_index', methods: ['GET'])]
     public function index(): Response
     {
+
         return $this->json([
             'message' => 'display all users',
             'timestamp' => time(),
             'users' => $this->userService->getAllActiveUsers(),
-        ], 200, [], ['groups' => ['user:read']]);
+        ], 200, [], ['groups' => ['user:read', 'user:read:courses']]);
     }
 
 

@@ -49,10 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?bool $isActive = null;
 
-    #[ORM\Column]
-    #[Groups(['user:read'])]
-    private array $favoriteCourses = [];
-
     #[ORM\ManyToOne(inversedBy: 'users', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['user:read'])]
@@ -72,10 +68,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read:sessions'])] // ← Groupe séparé pour éviter la circularité
     private Collection $sessions;
 
+    /**
+     * @var Collection<int, Course>
+     */
+    #[Groups(['user:read:courses'])]
+    #[ORM\ManyToMany(targetEntity: Course::class, inversedBy: 'users')]
+    private Collection $favoriteCourses;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+        $this->favoriteCourses = new ArrayCollection();
     }
 
     // ... (tous vos getters/setters restent identiques)
@@ -200,16 +204,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFavoriteCourses(): array
-    {
-        return $this->favoriteCourses;
-    }
 
-    public function setFavoriteCourses(array $favoriteCourses): static
-    {
-        $this->favoriteCourses = $favoriteCourses;
-        return $this;
-    }
 
     /**
      * @return Collection<int, Course>
@@ -260,6 +255,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->sessions->removeElement($session)) {
             $session->removeStudent($this);
         }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getFavoriteCourses(): Collection
+    {
+        return $this->favoriteCourses;
+    }
+
+    public function addFavoriteCourse(Course $favoriteCourse): static
+    {
+        if (!$this->favoriteCourses->contains($favoriteCourse)) {
+            $this->favoriteCourses->add($favoriteCourse);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteCourse(Course $favoriteCourse): static
+    {
+        $this->favoriteCourses->removeElement($favoriteCourse);
+
         return $this;
     }
 }

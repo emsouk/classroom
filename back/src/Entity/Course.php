@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CourseRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CourseRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 class Course
@@ -14,9 +15,12 @@ class Course
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+    #[Groups(['user:read:courses'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read:courses'])]
     private ?string $title = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
@@ -31,7 +35,7 @@ class Course
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updated_At = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -45,9 +49,16 @@ class Course
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'favoriteCourses')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->exercices = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     // #[ORM\Column(nullable: true)]
@@ -108,12 +119,12 @@ class Course
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_At;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_At): static
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
-        $this->updated_At = $updated_At;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
@@ -180,6 +191,33 @@ class Course
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addFavoriteCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeFavoriteCourse($this);
+        }
 
         return $this;
     }

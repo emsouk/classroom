@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Course;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,9 +24,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findAllActive(): array
     {
         return $this->createQueryBuilder('u')
+            // ->addSelect('uc')
             ->where('u.isActive = :active')
             ->setParameter('active', true)
             ->orderBy('u.id', 'ASC')
+            // ->innerJoin('u.courses', 'uc')
             ->getQuery()
             ->getResult();
     }
