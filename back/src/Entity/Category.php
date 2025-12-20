@@ -6,25 +6,63 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['category:read']],
+            uriTemplate: '/categories/{id}',
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['category:read']],
+            uriTemplate: '/categories',
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['category:read']],
+            denormalizationContext: ['groups' => ['category:create']],
+            uriTemplate: '/categories',
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['category:read']],
+            denormalizationContext: ['groups' => ['category:create']],
+            uriTemplate: '/categories/{id}',
+        ),
+        new Delete(
+            uriTemplate: '/categories/{id}',
+        ),
+    ],
+    normalizationContext: ['groups' => ['category:read']],
+    denormalizationContext: ['groups' => ['category:write']],
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category:read', 'course:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['category:read', 'category:create', 'course:read'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Course>
      */
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'category')]
+    #[Groups(['category:read:courses'])]
     private Collection $courses;
 
     #[ORM\Column]
+    #[Groups(['category:read'])]
     private ?bool $isActive = null;
 
     public function __construct()

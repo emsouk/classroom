@@ -6,19 +6,37 @@ use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups; // ← AJOUTEZ CETTE LIGNE
+use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ApiResource(
     operations: [
         new Get(
-            normalizationContext: ['groups' => ['role:read']]
+            normalizationContext: ['groups' => ['role:read']],
+            uriTemplate: '/roles/{id}',
         ),
         new GetCollection(
-            normalizationContext: ['groups' => ['role:read']]
+            normalizationContext: ['groups' => ['role:read']],
+            uriTemplate: '/roles',
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['role:read']],
+            denormalizationContext: ['groups' => ['role:create']],
+            uriTemplate: '/roles',
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['role:read']],
+            denormalizationContext: ['groups' => ['role:create']],
+            uriTemplate: '/roles/{id}',
+        ),
+        new Delete(
+            uriTemplate: '/roles/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['role:read']],
@@ -30,11 +48,11 @@ class Role
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'role:read'])] // ← AJOUTEZ
+    #[Groups(['user:read', 'role:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'role:read'])] // ← AJOUTEZ
+    #[Groups(['user:read', 'role:read', 'role:create'])]
     private ?string $name = null;
 
     /**
