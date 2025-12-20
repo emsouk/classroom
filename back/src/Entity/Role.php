@@ -7,8 +7,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups; // ← AJOUTEZ CETTE LIGNE
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['role:read']]
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['role:read']]
+        ),
+    ],
+    normalizationContext: ['groups' => ['role:read']],
+    denormalizationContext: ['groups' => ['role:write']],
+)]
+
 class Role
 {
     #[ORM\Id]

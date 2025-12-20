@@ -2,39 +2,85 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use App\State\UserUpdateProcessor;
+use ApiPlatform\Metadata\ApiResource;
+use App\State\UserSubscribeProcessor;
+use ApiPlatform\Metadata\GetCollection;
+
+
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['user:read']],
+            uriTemplate: '/users/{id}',
+
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['user:read']],
+            uriTemplate: '/users',
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['user:read']],
+            denormalizationContext: ['groups' => ['user:create']],
+            uriTemplate: '/users/subscribe',
+            processor: UserSubscribeProcessor::class
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['user:read']],
+            denormalizationContext: ['groups' => ['user:create']],
+            uriTemplate: '/users/update/{id}',
+            processor: UserUpdateProcessor::class
+        ),
+        new Delete(
+            normalizationContext: ['groups' => ['user:read']],
+            denormalizationContext: ['groups' => ['user:delete']],
+            uriTemplate: '/users/delete/{id}',
+        ),
+
+    ],
+
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'course:read', 'session:read'])]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:create'])]
     private ?string $email = null;
 
     #[ORM\Column]
     // ⚠️ NE JAMAIS exposer le mot de passe dans l'API
+    #[Groups(['user:create'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'course:read', 'session:read'])]
+    #[Groups(['user:read', 'user:create'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'course:read', 'session:read'])]
+    #[Groups(['user:read', 'user:create'])]
     private ?string $lastname = null;
 
     #[ORM\Column]
@@ -47,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Groups(['user:read'])]
-    private ?bool $isActive = null;
+    private bool $isActive = true;
 
     #[ORM\ManyToOne(inversedBy: 'users', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
