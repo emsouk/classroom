@@ -20,24 +20,24 @@ use ApiPlatform\Metadata\Delete;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['course:read']],
-            uriTemplate: '/courses/{id}',
+            uriTemplate: '/course/{id}',
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['course:read']],
-            uriTemplate: '/courses',
+            uriTemplate: '/course',
         ),
         new Post(
             normalizationContext: ['groups' => ['course:read']],
             denormalizationContext: ['groups' => ['course:create']],
-            uriTemplate: '/courses',
+            uriTemplate: '/course',
         ),
         new Put(
             normalizationContext: ['groups' => ['course:read']],
             denormalizationContext: ['groups' => ['course:create']],
-            uriTemplate: '/courses/{id}',
+            uriTemplate: '/course/{id}',
         ),
         new Delete(
-            uriTemplate: '/courses/{id}',
+            uriTemplate: '/course/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['course:read']],

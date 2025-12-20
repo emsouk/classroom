@@ -20,24 +20,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['session:read']],
-            uriTemplate: '/sessions/{id}',
+            uriTemplate: '/session/{id}',
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['session:read']],
-            uriTemplate: '/sessions',
+            uriTemplate: '/session',
         ),
         new Post(
             normalizationContext: ['groups' => ['session:read']],
             denormalizationContext: ['groups' => ['session:create']],
-            uriTemplate: '/sessions',
+            uriTemplate: '/session',
         ),
         new Put(
             normalizationContext: ['groups' => ['session:read']],
             denormalizationContext: ['groups' => ['session:create']],
-            uriTemplate: '/sessions/{id}',
+            uriTemplate: '/session/{id}',
         ),
         new Delete(
-            uriTemplate: '/sessions/{id}',
+            uriTemplate: '/session/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['session:read']],

@@ -17,24 +17,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['exercice:read']],
-            uriTemplate: '/exercices/{id}',
+            uriTemplate: '/exercice/{id}',
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['exercice:read']],
-            uriTemplate: '/exercices',
+            uriTemplate: '/exercice',
         ),
         new Post(
             normalizationContext: ['groups' => ['exercice:read']],
             denormalizationContext: ['groups' => ['exercice:create']],
-            uriTemplate: '/exercices',
+            uriTemplate: '/exercice',
         ),
         new Put(
             normalizationContext: ['groups' => ['exercice:read']],
             denormalizationContext: ['groups' => ['exercice:create']],
-            uriTemplate: '/exercices/{id}',
+            uriTemplate: '/exercice/{id}',
         ),
         new Delete(
-            uriTemplate: '/exercices/{id}',
+            uriTemplate: '/exercice/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['exercice:read']],

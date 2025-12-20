@@ -19,6 +19,10 @@ class RoleService
         return $this->roleRepository->findAll();
     }
 
+    public function getRoleById(int $id): ?Role
+    {
+        return $this->roleRepository->find($id);
+    }
 
     public function getRoleByName(string $name): ?Role
     {
@@ -40,6 +44,21 @@ class RoleService
 
         return $role;
     }
+
+    public function updateRole(Role $role, array $data): Role
+    {
+
+
+        if (isset($data['name'])) {
+            $role->setName($data['name']);
+        }
+
+        $this->entityManager->persist($role);
+        $this->entityManager->flush();
+
+        return $role;
+    }
+
 
 
     public function deleteRole(Role $role): void

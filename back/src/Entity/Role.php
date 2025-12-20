@@ -19,25 +19,13 @@ use ApiPlatform\Metadata\Delete;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['role:read']],
-            uriTemplate: '/roles/{id}',
+            uriTemplate: '/role/{id}',
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['role:read']],
-            uriTemplate: '/roles',
+            uriTemplate: '/role',
         ),
-        new Post(
-            normalizationContext: ['groups' => ['role:read']],
-            denormalizationContext: ['groups' => ['role:create']],
-            uriTemplate: '/roles',
-        ),
-        new Put(
-            normalizationContext: ['groups' => ['role:read']],
-            denormalizationContext: ['groups' => ['role:create']],
-            uriTemplate: '/roles/{id}',
-        ),
-        new Delete(
-            uriTemplate: '/roles/{id}',
-        ),
+
     ],
     normalizationContext: ['groups' => ['role:read']],
     denormalizationContext: ['groups' => ['role:write']],
@@ -48,18 +36,17 @@ class Role
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'role:read'])]
+    #[Groups(['user:read', 'role:read', 'course:read', 'session:read:students'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'role:read', 'role:create'])]
+    #[Groups(['user:read', 'role:read', 'role:create', 'course:read', 'session:read:students'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'role')] // ← Corrigé : 'role' au lieu de 'roles'
-    // ⚠️ PAS de Groups ici pour éviter la circularité
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'role')]
     private Collection $users;
 
     public function __construct()

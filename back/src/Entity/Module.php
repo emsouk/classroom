@@ -19,24 +19,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['module:read']],
-            uriTemplate: '/modules/{id}',
+            uriTemplate: '/module/{id}',
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['module:read']],
-            uriTemplate: '/modules',
+            uriTemplate: '/module',
         ),
         new Post(
             normalizationContext: ['groups' => ['module:read']],
             denormalizationContext: ['groups' => ['module:create']],
-            uriTemplate: '/modules',
+            uriTemplate: '/module',
         ),
         new Put(
             normalizationContext: ['groups' => ['module:read']],
             denormalizationContext: ['groups' => ['module:create']],
-            uriTemplate: '/modules/{id}',
+            uriTemplate: '/module/{id}',
         ),
         new Delete(
-            uriTemplate: '/modules/{id}',
+            uriTemplate: '/module/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['module:read']],

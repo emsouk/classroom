@@ -19,24 +19,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             normalizationContext: ['groups' => ['category:read']],
-            uriTemplate: '/categories/{id}',
+            uriTemplate: '/category/{id}',
         ),
         new GetCollection(
             normalizationContext: ['groups' => ['category:read']],
-            uriTemplate: '/categories',
+            uriTemplate: '/category',
         ),
         new Post(
             normalizationContext: ['groups' => ['category:read']],
             denormalizationContext: ['groups' => ['category:create']],
-            uriTemplate: '/categories',
+            uriTemplate: '/category',
         ),
         new Put(
             normalizationContext: ['groups' => ['category:read']],
             denormalizationContext: ['groups' => ['category:create']],
-            uriTemplate: '/categories/{id}',
+            uriTemplate: '/category/{id}',
         ),
         new Delete(
-            uriTemplate: '/categories/{id}',
+            uriTemplate: '/category/{id}',
         ),
     ],
     normalizationContext: ['groups' => ['category:read']],
