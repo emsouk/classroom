@@ -24,29 +24,22 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-        
-        // ✅ Récupérer les rôles avec la bonne référence
-        /** @var Role $roleUser */
         $roleUser = $this->getReference(RoleFixtures::ROLE_USER, Role::class);
-
-        /** @var Role $roleAdmin */
         $roleAdmin = $this->getReference(RoleFixtures::ROLE_ADMIN, Role::class);
-
-        /** @var Role $roleModerator */
         $roleModerator = $this->getReference(RoleFixtures::ROLE_MODERATOR, Role::class);
 
 
 
         for ($i = 0; $i < 20; $i++) {
             $user = new User();
-            $user->setEmail($faker->unique()->email());  // ✅ unique() pour éviter les doublons
+            $user->setEmail($faker->unique()->email());
             $user->setFirstname($faker->firstName());
             $user->setLastname($faker->lastName());
+            $user->setIsActive($faker->randomElement([true, false]));
             $user->setRole(
                 $faker->randomElement([$roleUser, $roleAdmin, $roleModerator])
             );
 
-            // ✅ Utiliser password_hash pour un vrai mot de passe
             $user->setPassword(password_hash('password123', PASSWORD_BCRYPT));
 
             $user->setCreatedAt(\DateTimeImmutable::createFromMutable($faker->dateTime()));

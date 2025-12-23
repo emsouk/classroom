@@ -8,45 +8,84 @@ use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Attribute\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['course:read']],
+            uriTemplate: '/course/{id}',
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['course:read']],
+            uriTemplate: '/course',
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['course:read']],
+            denormalizationContext: ['groups' => ['course:create']],
+            uriTemplate: '/course',
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['course:read']],
+            denormalizationContext: ['groups' => ['course:create']],
+            uriTemplate: '/course/{id}',
+        ),
+        new Delete(
+            uriTemplate: '/course/{id}',
+        ),
+    ],
+    normalizationContext: ['groups' => ['course:read']],
+    denormalizationContext: ['groups' => ['course:write']],
+)]
 class Course
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
-    #[Groups(['user:read:courses'])]
+    #[Groups(['course:read', 'user:read:courses'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read:courses'])]
+    #[Groups(['course:read', 'course:create', 'user:read:courses'])]
     private ?string $title = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['course:read', 'course:create'])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['course:read'])]
     private ?User $teacherId = null;
 
     #[ORM\Column]
+    #[Groups(['course:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['course:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['course:read', 'course:create'])]
     private ?string $content = null;
 
     /**
      * @var Collection<int, Exercice>
      */
     #[ORM\OneToMany(targetEntity: Exercice::class, mappedBy: 'course')]
+    #[Groups(['course:read:exercices'])]
     private Collection $exercices;
 
     #[ORM\Column]
+    #[Groups(['course:read'])]
     private ?bool $isActive = null;
 
     /**

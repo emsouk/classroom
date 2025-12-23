@@ -71,7 +71,7 @@ final class ModuleController extends AbstractController
     #[Route('/{id}', name: 'app_module_delete', methods: ['POST'])]
     public function delete(Request $request, Module $module, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$module->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $module->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($module);
             $entityManager->flush();
         }

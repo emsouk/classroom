@@ -40,6 +40,7 @@ class UserService
         $user->setUpdatedAt(new \DateTimeImmutable());
         $user->setIsActive(true);
 
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -91,7 +92,8 @@ class UserService
 
     public function deleteUser(User $user): void
     {
-        $this->entityManager->remove($user);
+        $user->setIsActive(false);
+        $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 

@@ -6,26 +6,47 @@ use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups; // ← AJOUTEZ CETTE LIGNE
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: ['groups' => ['role:read']],
+            uriTemplate: '/role/{id}',
+        ),
+        new GetCollection(
+            normalizationContext: ['groups' => ['role:read']],
+            uriTemplate: '/role',
+        ),
+
+    ],
+    normalizationContext: ['groups' => ['role:read']],
+    denormalizationContext: ['groups' => ['role:write']],
+)]
+
 class Role
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'role:read'])] // ← AJOUTEZ
+    #[Groups(['user:read', 'role:read', 'course:read', 'session:read:students'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'role:read'])] // ← AJOUTEZ
+    #[Groups(['user:read', 'role:read', 'role:create', 'course:read', 'session:read:students'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'role')] // ← Corrigé : 'role' au lieu de 'roles'
-    // ⚠️ PAS de Groups ici pour éviter la circularité
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'role')]
     private Collection $users;
 
     public function __construct()

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\UserService;
+use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -86,7 +87,7 @@ final class UserController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_user_update', requirements: ['id' => '\d+'], methods: ['PUT', 'PATCH'])]
+    #[Route('/update{id}', name: 'app_user_update', requirements: ['id' => '\d+'], methods: ['PUT', 'PATCH'])]
     public function update(Request $request, User $user): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -114,9 +115,10 @@ final class UserController extends AbstractController
     }
 
 
-    #[Route('/{id}', name: 'app_user_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[Route('/delete/{id}', name: 'app_user_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
     public function delete(User $user): Response
     {
+
         try {
             $this->userService->deleteUser($user);
 
